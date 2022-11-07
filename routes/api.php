@@ -49,6 +49,7 @@ Route::group(['middleware' => 'api'], function () {
         Route::post('logout', 'logout');
         Route::post('refresh_token', 'refresh');
         Route::post('me', 'me');
+        Route::post('/verify-phone', 'verifyPhone')->middleware(["auth:api"]);
 
         Route::post(
             '/forgot-password',

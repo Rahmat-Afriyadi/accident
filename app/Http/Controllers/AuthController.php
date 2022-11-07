@@ -11,14 +11,16 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Twilio\Rest\Client;
 
 class AuthController extends Controller
 {
-    //
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:api', ['except' => ['login']]);
-    // }
+    private $verifyPhone;
+    public function __construct()
+    {
+        // $this->middleware('auth:api', ['except' => ['login']]);
+        $this->verifyPhone = new Client(getenv("TWILIO_SID"), getenv("TWILIO_AUTH_TOKEN"));
+    }
 
     //register user
     public function register(Request $request)
@@ -51,6 +53,11 @@ class AuthController extends Controller
             $user->transportation_num = $transportation_num;
             $user->phone = $phone;
             $user->password = Hash::make($password);
+
+            $this->verifyPhone->verify->v2->services(getenv("TWILIO_VERIFY_SID"))
+                ->verifications
+                ->create($phone, "sms");
+
             if ($user->save()) {
                 // request to laravel passport routes
 
@@ -61,7 +68,7 @@ class AuthController extends Controller
                 }
 
                 // call function to get verif email
-                event(new Registered($user));
+                // event(new Registered($user));
                 return response()->json(['user' => $user, 'token' => $this->respondWithToken($token)]);
             }
         } catch (\Exception $e) {
@@ -156,5 +163,28 @@ class AuthController extends Controller
         return $status === Password::PASSWORD_RESET
             ? $this->login($request)
             : back()->withErrors(['email' => [__($status)]]);
+    }
+
+    public function verifyPhone(Request $request)
+    {
+        $data = $request->validate([
+            'verification_code' => ['required', 'numeric'],
+        ]);
+        $user = User::find(Auth::id());
+        /* Get credentials from .env */
+        $verification = $this->verifyPhone->verify->v2->services(getenv("TWILIO_VERIFY_SID"))
+            ->verificationChecks
+            ->create([
+                "to" => $user->phone,
+                "code" => $data["verification_code"]
+            ]);
+        if ($verification->valid) {
+            // $user = tap(User::where('phone_number', $data['phone_number']))->update(['isVerified' => true]);
+            // /* Authenticate user */
+            // Auth::login($user->first());
+            // return redirect()->route('home')->with(['message' => 'Phone number verified']);
+            return response()->json(["message" => "phone number berhasil di verifikasi"], 200);
+        }
+        // return back()->with(['phone_number' => $data['phone_number'], 'error' => 'Invalid verification code entered!']);
     }
 }
