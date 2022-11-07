@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('image')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->enum("transportation_type", ["CARS", "TRUCK", "MOTORCYCLE"]);
             $table->string("transportation_num");

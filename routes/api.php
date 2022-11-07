@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VerifyEmailController;
 
 /*
@@ -25,6 +26,12 @@ Route::controller(ReportController::class)
         Route::post("/", "store")->middleware(["auth:api"]);
         Route::put("/update/{slug}", "update")->middleware(["auth:api"]);
         Route::delete("/delete/{id}", "delete")->middleware(["auth:api"]);
+    });
+
+Route::controller(UserController::class)
+    ->prefix("users")
+    ->group(function () {
+        Route::post("/upload-file", "uploadImageProfile");
     });
 
 Route::controller(VerifyEmailController::class)->group(function () {
