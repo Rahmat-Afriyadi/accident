@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\VerifyEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,20 @@ Route::controller(ReportController::class)
         Route::put("/update/{slug}", "update")->middleware(["auth:api"]);
         Route::delete("/delete/{id}", "delete")->middleware(["auth:api"]);
     });
+
+Route::controller(VerifyEmailController::class)->group(function () {
+    // processing token
+    Route::get('/email/verify/{id}/{hash}', '__invoke')
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+    // resend link for email verification
+    Route::post('/email/verify/resend', 'send')
+        ->middleware(['auth:api', 'throttle:6,1'])
+        ->name('verification.send');
+    // handdle verified middleware
+    Route::get('/email/verify', 'show')
+        ->name('verification.notice');
+});
 
 Route::group(['middleware' => 'api'], function () {
 

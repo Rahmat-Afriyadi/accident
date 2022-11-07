@@ -40,6 +40,7 @@ class AuthController extends Controller
         $transportation_type = $request->transportation_type;
         $phone = $request->phone;
         $password = $request->password;
+        $transportation_num = $request->transportation_num;
 
         // create new user
         try {
@@ -47,6 +48,7 @@ class AuthController extends Controller
             $user->name = $name;
             $user->email = $email;
             $user->transportation_type = $transportation_type;
+            $user->transportation_num = $transportation_num;
             $user->phone = $phone;
             $user->password = Hash::make($password);
             if ($user->save()) {
@@ -59,7 +61,7 @@ class AuthController extends Controller
                 }
 
                 // call function to get verif email
-                // event(new Registered($user));
+                event(new Registered($user));
                 return response()->json(['user' => $user, 'token' => $this->respondWithToken($token)]);
             }
         } catch (\Exception $e) {
