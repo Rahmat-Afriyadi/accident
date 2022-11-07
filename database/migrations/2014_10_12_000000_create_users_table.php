@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->enum("transportation_type", ["CARS", "TRUCK", "MOTORCYCLE"]);
+            $table->string("transportation_num");
             $table->string('phone');
             $table->string('password');
             $table->rememberToken();

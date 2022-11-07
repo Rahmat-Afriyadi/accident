@@ -29,6 +29,7 @@ class AuthController extends Controller
             'phone' => 'required',
             'email' => 'required|email|unique:users',
             'transportation_type' => 'required|in:CARS,TRUCK,MOTORCYCLE',
+            'transportation_num' => 'required|string',
             'password' => 'required|min:6',
         ]);
         if ($validator->fails()) {
