@@ -31,12 +31,12 @@ class ReportController extends Controller
             return response()->json(["message" => $th->getMessage()], 404);
         }
     }
-    public function udpate(ReportUpdate $request, $id)
+    public function update(ReportUpdate $request, $id)
     {
         try {
             $input = $request->all();
             $report = Report::find($id);
-            if ($report::update($input)) {
+            if ($report->update($input)) {
                 return response()->json($report, 200);
             }
         } catch (\Throwable $th) {

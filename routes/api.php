@@ -21,9 +21,9 @@ Route::controller(ReportController::class)
     ->group(function () {
         Route::get("/", "index");
         Route::get("/show/{id}", "show");
-        Route::post("/", "store");
-        Route::put("/update/{slug}", "update");
-        Route::delete("/delete/{id}", "delete");
+        Route::post("/", "store")->middleware(["auth:api"]);
+        Route::put("/update/{slug}", "update")->middleware(["auth:api"]);
+        Route::delete("/delete/{id}", "delete")->middleware(["auth:api"]);
     });
 
 Route::group(['middleware' => 'api'], function () {
