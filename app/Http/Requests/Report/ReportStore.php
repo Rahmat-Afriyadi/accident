@@ -27,7 +27,9 @@ class ReportStore extends FormRequest
             //
             "count_of_victims" => "required|integer",
             "desc" => "required|string",
+            "title" => "required|string",
             "location" => "required|string",
+            "image" => "required|"
         ];
     }
 }

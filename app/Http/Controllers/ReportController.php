@@ -7,6 +7,7 @@ use App\Http\Requests\Report\ReportUpdate;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ReportController extends Controller
 {
@@ -26,6 +27,8 @@ class ReportController extends Controller
         try {
             $input = $request->all();
             $input["user_id"] = Auth::id();
+            $image_url = $this->uploadFile($request, "image");
+            $input["image"] = $image_url;
             if ($report = Report::create($input)) {
                 return response()->json($report, 200);
             }
@@ -37,7 +40,13 @@ class ReportController extends Controller
     {
         try {
             $input = $request->all();
+
             $report = Report::find($id);
+            if ($request->hasFile('image')) {
+                $image_url = $this->uploadFile($request, "image");
+                Storage::delete("image/" . $report->image);
+                $input["image"] = $image_url;
+            }
             if ($report->update($input)) {
                 return response()->json($report, 200);
             }
