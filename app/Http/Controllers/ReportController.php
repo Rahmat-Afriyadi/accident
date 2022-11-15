@@ -6,6 +6,7 @@ use App\Http\Requests\Report\ReportStore;
 use App\Http\Requests\Report\ReportUpdate;
 use App\Models\Report;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller
 {
@@ -24,6 +25,7 @@ class ReportController extends Controller
     {
         try {
             $input = $request->all();
+            $input["user_id"] = Auth::id();
             if ($report = Report::create($input)) {
                 return response()->json($report, 200);
             }
