@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string("transportation_num");
             $table->string('phone');
             $table->string('password');
+            $table->boolean("phone_verified")->default(0);
             $table->rememberToken();
             // $table->unsignedBigInteger("role_id");
             // $table->foreign("role_id")->references("id")->on("roles")->onDelete("cascade");

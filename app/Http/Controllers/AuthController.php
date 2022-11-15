@@ -183,6 +183,8 @@ class AuthController extends Controller
             // /* Authenticate user */
             // Auth::login($user->first());
             // return redirect()->route('home')->with(['message' => 'Phone number verified']);
+            $user->phone_verified = 1;
+            $user->save();
             return response()->json(["message" => "phone number berhasil di verifikasi"], 200);
         }
         // return back()->with(['phone_number' => $data['phone_number'], 'error' => 'Invalid verification code entered!']);
