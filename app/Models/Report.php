@@ -9,4 +9,9 @@ class Report extends Model
 {
     use HasFactory;
     protected $guarded = ["id", "created_at", "upated_at"];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, "user_id", "id");
+    }
 }

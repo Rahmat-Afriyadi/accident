@@ -12,12 +12,12 @@ class ReportController extends Controller
     //
     public function index()
     {
-        $reports = Report::all();
+        $reports = Report::with("author")->all();
         return response()->json($reports, 200);
     }
     public function show($id)
     {
-        $report = Report::find($id);
+        $report = Report::find($id)->with("author");
         return response()->json($report, 200);
     }
     public function store(ReportStore $request)

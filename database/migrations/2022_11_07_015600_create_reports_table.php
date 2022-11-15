@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer("count_of_victims");
             $table->text("desc");
             $table->string("location");
+            $table->unsignedBigInteger("user_id");
+            $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
             $table->timestamps();
         });
     }
